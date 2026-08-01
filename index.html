@@ -18859,10 +18859,66 @@ B) Opci\xF3n B*` }),
     const renderTabContent = () => {
       if (activeView === "temario") {
         const sortedSchedule = [...schedule].sort((a, b) => a.week - b.week);
+        const splitTemasList = (str) => (str || "").split(/,|;|\/|\n| y | Y /).map((t) => t.trim()).filter(Boolean);
+        const buildTemasSummary = (field) => {
+          const counts = {};
+          sortedSchedule.forEach((s) => {
+            splitTemasList(s[field]).forEach((label) => {
+              const key = label.toLowerCase();
+              if (!counts[key]) counts[key] = { label, count: 0 };
+              counts[key].count += 1;
+            });
+          });
+          return Object.values(counts).sort((a, b) => a.label.localeCompare(b.label, "es"));
+        };
+        const specSummary = buildTemasSummary("spec");
+        const legSummary = buildTemasSummary("leg");
         return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "space-y-5", children: [
           /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "mb-5.5", children: [
             /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { className: "text-xl font-extrabold tracking-tight text-[#1A1712] mb-1", children: t("syllabusTitle") }),
             /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-sm font-medium text-[#8C8579]", children: t("syllabusSubtitle") })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4 mb-1", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bg-white rounded-3xl p-5 border border-[rgba(30,26,18,0.07)] shadow-[0_1px_1px_rgba(26,23,18,0.02),0_12px_24px_-14px_rgba(26,23,18,0.12)]", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "text-[10px] font-black text-[#E14E3C] uppercase tracking-widest mb-3 flex items-center gap-1.5", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Book, { size: 12 }),
+                "Espec\xEDfico \xB7 todos tus temas"
+              ] }),
+              specSummary.length ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "flex flex-wrap gap-2", children: specSummary.map((item) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+                "span",
+                {
+                  className: "text-xs font-bold text-[#1A1712] bg-[rgba(225,78,60,0.06)] border border-[rgba(225,78,60,0.15)] rounded-full px-3 py-1.5 flex items-center gap-1.5",
+                  children: [
+                    item.label,
+                    item.count > 1 && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "text-[10px] font-black text-white bg-[#E14E3C] rounded-full px-1.5 py-0.5", children: [
+                      "x",
+                      item.count
+                    ] })
+                  ]
+                },
+                item.label
+              )) }) : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-xs font-medium text-[rgba(26,23,18,0.4)]", children: "A\xFAn no has apuntado temas espec\xEDficos." })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "bg-white rounded-3xl p-5 border border-[rgba(30,26,18,0.07)] shadow-[0_1px_1px_rgba(26,23,18,0.02),0_12px_24px_-14px_rgba(26,23,18,0.12)]", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "text-[10px] font-black text-[#3457D6] uppercase tracking-widest mb-3 flex items-center gap-1.5", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Book, { size: 12 }),
+                "Legislaci\xF3n \xB7 todos tus temas"
+              ] }),
+              legSummary.length ? /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "flex flex-wrap gap-2", children: legSummary.map((item) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+                "span",
+                {
+                  className: "text-xs font-bold text-[#1A1712] bg-[rgba(52,87,214,0.06)] border border-[rgba(52,87,214,0.15)] rounded-full px-3 py-1.5 flex items-center gap-1.5",
+                  children: [
+                    item.label,
+                    item.count > 1 && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("span", { className: "text-[10px] font-black text-white bg-[#3457D6] rounded-full px-1.5 py-0.5", children: [
+                      "x",
+                      item.count
+                    ] })
+                  ]
+                },
+                item.label
+              )) }) : /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("p", { className: "text-xs font-medium text-[rgba(26,23,18,0.4)]", children: "A\xFAn no has apuntado temas de legislaci\xF3n." })
+            ] })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "space-y-4", children: sortedSchedule.map((s) => {
             const examDate = s.end ? new Date(s.end[0], s.end[1] - 1, s.end[2]) : null;
